@@ -106,12 +106,61 @@ unchanged so they didn't get re-parented or duplicated) to fix it into a
 real 3-column table, and added Errands as its 6th row in the same pass.
 
 **Loose ends for the next session:**
-- No Mode-filtered view or Habit-System row work remains for Errands —
-  this closes out that thread. If a similar double-escaped-markdown glitch
-  turns up on another page, this is the pattern to recognize: check raw
-  `notion-fetch` output, not just how it looks rendered.
 - Projects Database `Area` tagging coverage still not re-audited (carried
   over, unrelated to this entry).
+
+---
+
+## 2026-09-02 (continued, later still) — Swept for the select→relation filter-drop bug elsewhere
+
+**Context:** direct follow-up to fixing the old Work page's broken Area
+filter — user asked to check whether any other view had the same problem
+(a view's filter silently losing its Area condition when the property
+converted from select to relation, rather than erroring).
+
+**What was checked, and result — all clean except the already-fixed Work
+page:**
+- Tasks data source's 10 native views (Tasks Database, Time Splits, Top of
+  Mind, Before Work, In Car, On Lunch, Making Dinner, At Home, Errands,
+  Mode Board) — none filtered on Area to begin with.
+- Projects data source's 2 native views (Project Main View, Project
+  Timeline) — no filters at all.
+- Routines database (1 view) and Household Projects database in the
+  Brother's Joint Teamspace (2 views) — neither has an `Area` property, so
+  neither was ever at risk.
+- Old Work page's Work Tasks/Work Projects — already fixed earlier this
+  session.
+- The 13 new Area pages built this session — correct by construction, no
+  risk.
+- Searched the workspace for other candidate pages (title search on
+  "Tasks", "Household", "Personal Tasks") — turned up nothing beyond what
+  was already known, plus Notion's own built-in "My Tasks" system widget
+  under "Home" (unrelated, no `Area` property, not part of this system).
+
+**Important caveat, not fully resolved:** database-level view lists (what
+`notion-fetch` returns for a database) only include views owned by that
+database — a *linked* view embedded on another page (like Work's, or the
+13 new Area pages') doesn't show up there at all. The sweep above is
+correct for every page this file and a targeted search turned up, but
+isn't a provable exhaustive sweep of the whole workspace — a linked view
+on some undiscovered page could theoretically still be silently broken.
+Re-run this sweep if the user finds a page with an unexpectedly-unfiltered
+list.
+
+**Side finding, not acted on:** both the **Personal** top-level page
+(`3cd06a5a-b036-804b-aa9e-d73794d805af`) and **AE Todo**
+(`3cd06a5a-b036-80b7-b242-fd86b27cd68b`) now come back from `notion-fetch`
+marked `deleted` (trashed) — neither had any embedded views so this is
+unrelated to the filter bug, but it's a workspace-map-affecting change
+that predates this entry and isn't logged anywhere. Flagged to the user;
+not yet confirmed whether it was intentional.
+
+**Loose ends for the next session:**
+- Confirm with the user whether Personal/AE Todo being trashed was
+  intentional; update `workspace-map.md`'s "Personal" section and the old
+  "Work (old, top-level)" Scratchpad reference once confirmed.
+- Projects Database `Area` tagging coverage still not re-audited (carried
+  over).
 
 ---
 
