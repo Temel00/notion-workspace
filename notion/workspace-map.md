@@ -16,20 +16,24 @@ because it was recently edited.
 
 ## Top level
 
-### Personal — `3cd06a5a-b036-804b-aa9e-d73794d805af`
-Private top-level page. Entry point for personal life admin. Links out to:
-- **Dashboard** (below) — planning views into Tasks/Projects/Routines
-- **Habit System** (below) — daily loop, weekly review, capture Inbox (ideas
-  included — see "Ideas has no separate page" in `conventions.md`)
+### Personal — `3cd06a5a-b036-804b-aa9e-d73794d805af` — **trashed**
+Deleted from Notion by the user, confirmed intentional 2026-09-02 (found
+via `notion-fetch` returning it `deleted`; the description below is
+historical, for context if it ever resurfaces in a fetch/search result).
+Was the private top-level entry point for personal life admin, linking to
+Dashboard, Habit System, and two static reference pages:
 - **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d` — static
   reference list (Garmin, Claude Pro, Squarespace domains, Bulwark), not a
-  database, no upkeep expected
-- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81` — static link/note
-  dump for trip research, not a database, no upkeep expected
+  database, no upkeep expected. Status post-Personal-deletion not
+  re-checked — may also be trashed or now orphaned; verify before treating
+  it as reachable.
+- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81` — static
+  link/note dump for trip research. Same caveat as above. (Distinct from
+  the **Backpacking** *Area* page under Dashboard → Areas, which is a
+  different, active page.)
 
-Shared items formerly parented here (Household Projects, Recipe Book) were
-moved to the Brother's Joint Teamspace — see below. Personal's own callout
-says so; don't re-add them here.
+Dashboard and Habit System (both below) don't depend on Personal as a
+parent and are unaffected by its deletion.
 
 ### Work (old, top-level) — `3cd06a5a-b036-8099-a149-fb66ceadf024`
 Private top-level page, predates the Areas database below. Duplicates the
@@ -40,9 +44,13 @@ new **Work** Area page's Tasks/Projects views — kept as-is per the user
   Date asc.
 - `## 📁 Projects` → **Work Projects** view — `view://3cd06a5a-b036-81ef-b96c-000c158c2e77`
   — filter `Area = Work` (relation).
-- `## 🗒️ Scratchpad` → link to **AE Todo** (`3cd06a5a-b036-80b7-b242-fd86b27cd68b`),
-  now a scratch/notes page, not a task list — the one open item it used to
-  hold was migrated into the shared Tasks database.
+- `## 🗒️ Scratchpad` → link to **AE Todo** (`3cd06a5a-b036-80b7-b242-fd86b27cd68b`)
+  — **trashed**, confirmed intentional 2026-09-02 (same as Personal above).
+  Was a scratch/notes page, not a task list; the one open item it used to
+  hold had already been migrated into the shared Tasks database before
+  deletion, so nothing was lost. This link on the Work page is now dead —
+  low priority to clean up since Work itself may eventually be retired in
+  favor of the new Work Area page (see below).
 
 **Fixed 2026-09-02:** both views had been built against the old `Area`
 *select* property and silently lost their Area filter when it was

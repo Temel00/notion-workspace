@@ -156,9 +156,28 @@ that predates this entry and isn't logged anywhere. Flagged to the user;
 not yet confirmed whether it was intentional.
 
 **Loose ends for the next session:**
-- Confirm with the user whether Personal/AE Todo being trashed was
-  intentional; update `workspace-map.md`'s "Personal" section and the old
-  "Work (old, top-level)" Scratchpad reference once confirmed.
+- Projects Database `Area` tagging coverage still not re-audited (carried
+  over).
+
+---
+
+## 2026-09-02 (continued, later still) — Personal/AE Todo deletion confirmed intentional
+
+**Context:** direct follow-up — user confirmed the Personal top-level page
+and AE Todo scratchpad (found trashed during the filter sweep above) were
+deleted on purpose, nothing to investigate.
+
+**Changes made:** updated `workspace-map.md`'s "Personal" entry and the
+old Work page's Scratchpad line to mark both as trashed rather than
+describing them as live pages, with a note that Known Subscriptions and
+Backpacking (formerly linked from Personal) haven't been re-verified as
+still reachable now that their parent is gone.
+
+**Loose ends for the next session:**
+- Verify Known Subscriptions (`37c06a5a-b036-80cd-ba97-f50c71e1c26d`) and
+  the static Backpacking notes page (`35306a5a-b036-80f0-8c4e-f78f55fb0d81`)
+  are still reachable now that Personal (their former parent) is gone —
+  not checked this session.
 - Projects Database `Area` tagging coverage still not re-audited (carried
   over).
 
