@@ -163,12 +163,15 @@ description as historical only. Also carries the `Related Household
 Project` relation described above.
 
 **`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
-field): select with options `Before Work`, `In Car`, `On Lunch`,
-`Making Dinner`, `At Home`, and `Errands` (confirmed intentional by the
-user 2026-09-02, after this file had flagged it as unexplained — it's a
-real sixth mode, just not yet written up on the Habit System page's Modes
-table below since its "When"/cue hasn't been worked out yet) — recurring
-time/place contexts in the user's
+field): select with 6 options — `Before Work`, `In Car`, `On Lunch`,
+`Making Dinner`, `At Home`, `Errands` (the 6th, confirmed intentional by
+the user 2026-09-02 after this file had flagged it as unexplained; it
+already had its own Mode-filtered Tasks view, `view://3cf06a5a-b036-814b-9c3b-000cf330d549`,
+and its own group in the Mode Board — only the Habit System page's Modes
+table hadn't caught up). All 6 now have a row on the Habit System page's
+Modes table — Errands is the one deliberately without a fixed cue (ad hoc:
+weeknights after ~4pm or anytime weekends, checked opportunistically) —
+recurring time/place contexts in the user's
 day, not urgency and not time-of-day in the generic Morning/Afternoon/
 Evening sense the old field used. See the Habit System page's "Modes"
 section for what belongs in each and the physical cue tied to it. A task

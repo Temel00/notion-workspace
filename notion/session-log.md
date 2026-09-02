@@ -74,18 +74,44 @@ this repo).
   a stable trigger tied to an existing routine, not a bare reminder).
 
 **Loose ends for the next session:**
-- Work out Errands' When/cue with the user and add it as a 6th row to the
-  Habit System page's Modes table (`3bf06a5a-b036-815c-b144-ca3ab35d8b9c`),
-  matching the existing table's format. Consider whether a 6th
-  Mode-filtered view on the Tasks data source is wanted too, matching the
-  other 5 (Before Work/In Car/On Lunch/Making Dinner/At Home each have
-  one, per the 2026-09-02 Mode-system entry above) — Errands doesn't have
-  one yet.
 - Projects Database `Area` tagging coverage still not re-audited.
 - Sweep other views for the same select→relation filter-drop gotcha
   (Work's was found only because this file happened to still describe the
   old filter — other views without such a paper trail could be silently
   broken too and nothing would surface it).
+
+---
+
+## 2026-09-02 (continued, later still) — Errands mode written up; Modes table was actually broken markup
+
+**Context:** direct follow-up — worked out Errands' When/cue with the user
+in conversation.
+
+**User's answer:** errands are ad hoc, not tied to a recurring window —
+weeknights after ~4pm, or anytime on weekends. No physical cue exists or
+was wanted; the mechanism is just checking the Errands view whenever free
+time opens up. Confirmed explicitly there's no stable trigger to invent
+here, unlike the other 5 modes.
+
+**Also discovered while editing:** the Habit System page's Modes table
+wasn't actually a rendered table at all — it was a wall of plain text with
+literal `\|` and stray `n` characters where pipes and line breaks should
+have been (visible only via `notion-fetch`'s raw markdown; looked fine at
+a glance in the earlier session). Root cause not confirmed, but consistent
+with a past `insert_content`/`replace_content` call that had already-escaped
+`\n`/`\|` sequences in its input, which got written literally instead of
+becoming real newlines and pipes. Rewrote the whole page's content
+(`replace_content`, preserving the two existing `<database>` embeds
+unchanged so they didn't get re-parented or duplicated) to fix it into a
+real 3-column table, and added Errands as its 6th row in the same pass.
+
+**Loose ends for the next session:**
+- No Mode-filtered view or Habit-System row work remains for Errands —
+  this closes out that thread. If a similar double-escaped-markdown glitch
+  turns up on another page, this is the pattern to recognize: check raw
+  `notion-fetch` output, not just how it looks rendered.
+- Projects Database `Area` tagging coverage still not re-audited (carried
+  over, unrelated to this entry).
 
 ---
 
