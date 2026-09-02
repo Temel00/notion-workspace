@@ -16,8 +16,13 @@ Private top-level page. Entry point for personal life admin. Links out to:
 - **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d` — static
   reference list (Garmin, Claude Pro, Squarespace domains, Bulwark), not a
   database, no upkeep expected
-- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81` — static link/note
-  dump for trip research, not a database, no upkeep expected
+
+As of 2026-09-02, Personal's link list no longer includes a `Backpacking`
+page — that page (static link/note dump for trip research) was moved to live
+as a sub-page of the "Backpacking" row in the Areas database (see below),
+alongside the other area-specific reference material. Don't re-add a
+standalone Backpacking link here; area-specific content belongs under its
+Areas row now, not scattered at the Personal top level.
 
 Shared items formerly parented here (Household Projects, Recipe Book) were
 moved to the Brother's Joint Teamspace — see below. Personal's own callout
@@ -47,6 +52,13 @@ Projects / Routines) followed by the three full database embeds:
   `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`)
 - Routines Database — `34d06a5a-b036-803c-a9da-fe7b0aef724b` (data source
   `collection://34d06a5a-b036-8092-aa2c-000b6efe63ed`)
+- Areas — `5848b419-2527-4481-8aa5-ee5a9cec5bdb` (data source
+  `collection://757e232c-13bb-409d-9430-3255aca40768`) — the life-area
+  taxonomy Tasks and Projects both relate to (see "Area is now a relation"
+  below). Added 2026-09-02; carries a `## 🧭 Areas` heading + description on
+  the Dashboard page explaining the reference-rollup relationship. Row pages
+  can hold area-specific reference content as sub-pages (e.g. Backpacking's
+  trip-planning links moved here from directly under Personal).
 
 ## Habit System — `3bf06a5a-b036-815c-b144-ca3ab35d8b9c`
 Well-built, deliberately untouched by the org cleanup. Contains:
@@ -104,13 +116,49 @@ the `Related Household Project` relation described above.
 
 **`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
 field): select with options `Before Work`, `In Car`, `On Lunch`,
-`Making Dinner`, `At Home` — recurring time/place contexts in the user's
-day, not urgency and not time-of-day in the generic Morning/Afternoon/
-Evening sense the old field used. See the Habit System page's "Modes"
-section for what belongs in each and the physical cue tied to it. A task
-can reasonably fit more than one Mode (laundry: Before Work or At Home) —
-that's expected, not a data problem; the `/ganymedes` skill (see below) is
-how those get resolved case by case rather than pinned permanently.
+`Making Dinner`, `At Home`, `Errands` — recurring time/place contexts in the
+user's day, not urgency and not time-of-day in the generic Morning/Afternoon/
+Evening sense the old field used. `Errands` has no physical-cue entry on the
+Habit System page's "Modes" table yet (that table only documents the
+original five) — flag this gap if you're editing that section. See the
+Habit System page's "Modes" section for what belongs in each and the
+physical cue tied to it. A task can reasonably fit more than one Mode
+(laundry: Before Work or At Home) — that's expected, not a data problem;
+the `/ganymedes` skill (see below) is how those get resolved case by case
+rather than pinned permanently.
+
+**`Area` property is a relation, not a select** (as of 2026-09-02, discovered
+mid-session — this contradicted the previous version of this doc, which
+described it as a plain `Work`/`Personal`/`Household` select; that was
+stale). It's a relation to the **Areas** data source
+(`collection://757e232c-13bb-409d-9430-3255aca40768`), which holds a
+granular life-area taxonomy — as of 2026-09-02: `Work`, `Household`,
+`Finances`, `Software Projects`, `Health & Fitness`, `Music`, `Running`,
+`Disc Golf`, `Fishing`, `Biking`, `Backpacking`, `Sewing`, `Outings` (plus
+one flagged-for-deletion retired row, `⚠️ Personal (retired — broken into
+specific areas)`). Projects also relates to Areas directly via its own
+`Area` property. **There is no automatic sync between a Task's `Area` and
+its `Related Projects`' `Area`** — Notion can't make one relation
+auto-populate from another. The user's explicit call (2026-09-02): keep
+`Area` a manual pick, checked for drift each session rather than automated.
+A read-only **`Project Area (reference)`** rollup property (renamed from
+"Rollup", which is what it's called when you add a relation-based rollup
+in the Notion UI without renaming it) shows the linked Project's Area
+side-by-side for exactly that drift check — it does not feed back into
+`Area` itself. When triaging tasks (via `/ganymedes` or otherwise): if
+`Related Projects` is set, set `Area` to match `Project Area (reference)`;
+if not, it's a standalone task and needs a judgment call on which Area
+fits.
+
+**`⚠️ Category (deprecated — see Mode=Errands, safe to delete)` property**
+(renamed from `Category` 2026-09-02): a single-option select
+(`Nightly Review`) that predated and duplicated `Mode = Errands` — same
+"batch of small personal-admin items" concept, two mechanisms. Per the
+user's direction, it's flagged for the manual-deletion workaround (see
+`conventions.md`) rather than dropped outright, since it still holds data
+on ~21 rows; new items should use `Mode = Errands` instead. Its one saved
+view was renamed to `⚠️ Nightly Review (deprecated — see Errands)` for the
+same reason — don't build new functionality on either.
 
 **`Top of Mind` property** (added 2026-09-02): a separate checkbox, not a
 Mode option — flags urgency independent of context. Deliberately split out

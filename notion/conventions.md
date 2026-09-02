@@ -1,15 +1,34 @@
 # Conventions
 
-## Area property, not separate databases
-Personal, Work, and Household tasks live in **one shared Tasks database**,
-distinguished by an `Area` select property (`Work` blue / `Personal` green /
-`Household` orange). This was a deliberate choice over per-area databases:
-one place to search, one place to review, filtered views (Work Tasks,
-Work Projects, Dashboard's "This Week") do the separation instead of the
-data model. When adding a new task, always set `Area`. When adding a new
-task-like database, prefer adding `Area` to it over spinning up a parallel
+## One shared Tasks database, not separate databases per area
+Personal, Work, and Household tasks (and everything else) live in **one
+shared Tasks database**, not split into per-area databases. This was a
+deliberate choice: one place to search, one place to review, filtered views
+(Work Tasks, Work Projects, Dashboard's "This Week") do the separation
+instead of the data model. When adding a new task-like database, prefer
+adding an `Area` relation to the Areas database over spinning up a parallel
 database, unless there's a real reason the item categorically isn't a task
 (e.g. Recipe Book entries).
+
+## Area is a relation to the Areas database, not a select
+As of 2026-09-02, `Area` (on both Tasks and Projects) is a **relation** to a
+dedicated **Areas** data source (`collection://757e232c-13bb-409d-9430-3255aca40768`,
+see `workspace-map.md`), not the `Work`/`Personal`/`Household` select this
+doc previously described — that description was stale by the time it was
+corrected. The Areas taxonomy is now granular life-area categories (Work,
+Household, Finances, Software Projects, Health & Fitness, Music, Running,
+Disc Golf, Fishing, Biking, Backpacking, Sewing, Outings), not just three
+buckets. When adding a new task, always set `Area` — pick whichever Areas
+row genuinely fits; there's no generic "Personal" catch-all anymore
+(deliberately retired, see `workspace-map.md`), so use `Household` for
+general home/life-admin items that don't tie to a specific hobby or Work.
+
+A Task linked to a Project via `Related Projects` does **not** automatically
+inherit that Project's `Area` — relations can't auto-sync from other
+relations in Notion. Check the read-only `Project Area (reference)` rollup
+property against `Area` for drift (this is a deliberate manual-check
+choice, not an oversight — see `workspace-map.md`) and set `Area` to match
+by hand when they diverge.
 
 ## "Inbox" is a reserved name — capture only
 Only one thing in this workspace should ever be named "Inbox": the capture
@@ -70,11 +89,17 @@ This keeps both sides navigable without manual upkeep.
 
 ## Mode vs. Area vs. Top of Mind — don't conflate these
 Three different axes exist on Tasks and are easy to blur together:
-- `Area` — which part of life (Work/Personal/Household).
+- `Area` — which part of life (a relation to the Areas database — see
+  above — not the Work/Personal/Household select this section used to
+  describe).
 - `Mode` — which recurring time/place context the task fits (Before Work,
-  In Car, On Lunch, Making Dinner, At Home). Added 2026-09-02, replacing
-  the old `Daily Priority` field (Top of Mind/Morning/Afternoon/Evening),
-  which was time-of-day-only and mostly unused.
+  In Car, On Lunch, Making Dinner, At Home, Errands). Added 2026-09-02,
+  replacing the old `Daily Priority` field (Top of Mind/Morning/Afternoon/
+  Evening), which was time-of-day-only and mostly unused. A separate,
+  now-deprecated `Category` select (one option, `Nightly Review`) briefly
+  overlapped with `Mode = Errands` for the same "batch of small
+  personal-admin items" purpose — it's flagged for deletion, not an
+  active third axis; don't treat it as one.
 - `Top of Mind` — a plain checkbox for urgency, independent of the other
   two. It used to be a `Daily Priority` option; it was deliberately split
   into its own property so an item can be both urgent and tied to a Mode
