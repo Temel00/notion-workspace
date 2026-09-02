@@ -1,15 +1,60 @@
 # Conventions
 
-## Area property, not separate databases
-Personal, Work, and Household tasks live in **one shared Tasks database**,
-distinguished by an `Area` select property (`Work` blue / `Personal` green /
-`Household` orange). This was a deliberate choice over per-area databases:
-one place to search, one place to review, filtered views (Work Tasks,
-Work Projects, Dashboard's "This Week") do the separation instead of the
-data model. When adding a new task, always set `Area`. When adding a new
-task-like database, prefer adding `Area` to it over spinning up a parallel
-database, unless there's a real reason the item categorically isn't a task
-(e.g. Recipe Book entries).
+## Area is a relation to an Areas database, not a select property
+**Superseded 2026-09-02** — this used to be a select property
+(`Work`/`Personal`/`Household`) on Tasks, described below in the original
+wording for history. At some point before 2026-09-02, outside any logged
+Claude Code session, it was converted to a relation pointing at a new
+**Areas** database (`collection://757e232c-13bb-409d-9430-3255aca40768`,
+embedded on Dashboard) — one row per area of life (Work, Household,
+Backpacking, Software Projects, Finances, etc. — 13 active rows as of
+2026-09-02, see `workspace-map.md`). Both Tasks and Projects now carry an
+`Area` relation to this database instead of a select value. When filtering
+a view by Area now, use the DSL's relation syntax — `FILTER "Area" =
+"<area-page-url>"` — not an option name; resolve the area's page URL first
+(search/fetch or `workspace-map.md`).
+
+**Original rationale (still holds, just via relation now):** one shared
+Tasks database rather than per-area databases — one place to search, one
+place to review, filtered views do the separation instead of the data
+model. When adding a new task, always set `Area`. When adding a new
+task-like database, prefer adding an `Area` relation to it over spinning up
+a parallel database, unless there's a real reason the item categorically
+isn't a task (e.g. Recipe Book entries).
+
+**Gotcha to watch for:** converting a property's type (select → relation,
+or similar) does not migrate existing view filters that reference it — the
+filter condition silently vanishes from the view's filter group instead of
+erroring. The old top-level Work page's "Work Tasks"/"Work Projects" views
+were built against the old select property and are now silently
+unfiltered-by-area (still filtering Completed only) — see the ⚠️ note on
+the "Work (old, top-level)" entry in `workspace-map.md`. After any property
+type change, re-check every view that filtered on it, don't assume it
+migrated cleanly.
+
+## Area pages (under the Areas database) — standard layout
+Each Area's page (a row in the Areas database) should hold two headed,
+Area-filtered inline views, in this order:
+```
+## ✅ Tasks
+<Tasks view, table, FILTER "Area" = "<this-area's-page-url>", named
+"<Area> Tasks">
+## 📁 Projects
+<Projects view, table, FILTER "Area" = "<this-area's-page-url>", named
+"<Area> Projects">
+```
+Built this way for all 13 active Area rows on 2026-09-02 (see
+`workspace-map.md` for the list and the retired row that was skipped).
+When creating a new Area row later, replicate this exact pattern rather
+than reinventing a layout — it's what "an Area page" means in this
+workspace now. Use `notion-create-view` with `parent_page_id` (not
+`database_id`) to append linked views to the Area page itself; add each
+section's heading via `update-page insert_content` *before* creating that
+section's view, and do the two Tasks-then-Projects sections as separate
+insert→create-view round trips — both `insert_content` and `create-view`
+append to the end of the page, so interleaving heading-then-view per
+section is what keeps the final order correct (batching both headings
+before both views produces the wrong order).
 
 ## "Inbox" is a reserved name — capture only
 Only one thing in this workspace should ever be named "Inbox": the capture

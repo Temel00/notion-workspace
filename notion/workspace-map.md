@@ -1,10 +1,18 @@
 # Workspace Map
 
 Inventory of the pages and databases that make up the Personal/Work system,
-as of 2026-08-31. IDs are Notion page/data-source IDs — fetch directly with
+as of 2026-09-02. IDs are Notion page/data-source IDs — fetch directly with
 `notion-fetch` using the `https://app.notion.com/p/<id-no-dashes>` URL form,
 or query a data source with `notion-query-data-sources` using the
 `collection://<data-source-id>` form.
+
+**Heads up:** as of 2026-09-02 this file was found to be significantly
+stale relative to the live workspace — `Area` had been changed from a
+select property to a relation pointing at a new **Areas** database,
+entirely outside any Claude Code session (no session-log entry covers the
+change). Re-verify anything below with a live `notion-fetch` before relying
+on it for a non-trivial change; don't assume this file is caught up just
+because it was recently edited.
 
 ## Top level
 
@@ -23,30 +31,76 @@ Shared items formerly parented here (Household Projects, Recipe Book) were
 moved to the Brother's Joint Teamspace — see below. Personal's own callout
 says so; don't re-add them here.
 
-### Work — `3cd06a5a-b036-8099-a149-fb66ceadf024`
-Private top-level page, mirrors Personal's role for work life. Structure:
-- `## ✅ Tasks` → **Work Tasks** view (table, filter `Area = Work AND
-  Completed ≠ true`, sorted by Due Date asc) — `view://3cd06a5a-b036-81c7-9262-000c34001c8e`
-- `## 📁 Projects` → **Work Projects** view (table, filter `Area = Work`)
-  — `view://3cd06a5a-b036-81ef-b96c-000c158c2e77`
+### Work (old, top-level) — `3cd06a5a-b036-8099-a149-fb66ceadf024`
+Private top-level page, predates the Areas database below. Structure:
+- `## ✅ Tasks` → **Work Tasks** view — `view://3cd06a5a-b036-81c7-9262-000c34001c8e`
+- `## 📁 Projects` → **Work Projects** view — `view://3cd06a5a-b036-81ef-b96c-000c158c2e77`
 - `## 🗒️ Scratchpad` → link to **AE Todo** (`3cd06a5a-b036-80b7-b242-fd86b27cd68b`),
   now a scratch/notes page, not a task list — the one open item it used to
   hold was migrated into the shared Tasks database.
 
-Both views read from the shared **Tasks database** (see below), filtered by
-the `Area` property — Work does not have its own separate task database.
+**⚠️ Broken as of 2026-09-02:** the Work Tasks view's filter was built for
+the old `Area` *select* property (`Area = Work AND Completed ≠ true`).
+When `Area` was converted to a relation (see Areas database below), that
+half of the filter silently dropped instead of erroring — the view's
+`advancedFilter` now has an empty filter group where the Area condition
+used to be, so it shows **all** incomplete tasks from every area, not just
+Work. The Work Projects view likely has the same problem. Not fixed yet —
+this now duplicates the new **Work** Area page below (which has a correctly
+filtered Tasks/Projects view). Flagged for the user to decide: fix this
+page's filters, or retire the page in favor of the Area page.
 
 ## Dashboard (formerly "Inbox") — `34d06a5a-b036-80e0-8ce9-ceeee841a3ab`
 Title/icon: "Dashboard" / 🗂️ (renamed from "Inbox" / 📬 — see
 `conventions.md` for why). This is the **planning** surface, not the capture
-surface. Layout: two-column quick-view section (To Process / This Week |
-Projects / Routines) followed by the three full database embeds:
-- Tasks — `34d06a5a-b036-804b-b00e-c5cfb202d856` (data source
-  `collection://34d06a5a-b036-805d-a876-000b3b97dc18`)
-- Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf` (data source
-  `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`)
-- Routines Database — `34d06a5a-b036-803c-a9da-fe7b0aef724b` (data source
+surface. Live layout as of 2026-09-02 (rebuilt since this file was last
+accurate — the two-column quick-view section described previously no
+longer exists):
+- `## 🎯 Mode Board — ready to work, by context` → inline Tasks database
+  embed (Mode-filtered views live on the Tasks data source itself, see
+  below)
+- Three full database embeds: Tasks — `34d06a5a-b036-804b-b00e-c5cfb202d856`
+  (data source `collection://34d06a5a-b036-805d-a876-000b3b97dc18`),
+  Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf` (data source
+  `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`), Routines Database —
+  `34d06a5a-b036-803c-a9da-fe7b0aef724b` (data source
   `collection://34d06a5a-b036-8092-aa2c-000b6efe63ed`)
+- `## 🧭 Areas — the taxonomy Tasks and Projects both point to` → inline
+  **Areas** database embed — `5848b419-2527-4481-8aa5-ee5a9cec5bdb`
+  (data source `collection://757e232c-13bb-409d-9430-3255aca40768`). See
+  "Areas database" below — this is the important structural addition this
+  file had missed entirely.
+
+## Areas database — `5848b419-2527-4481-8aa5-ee5a9cec5bdb`
+(data source `collection://757e232c-13bb-409d-9430-3255aca40768`)
+Lives inline on the Dashboard page (see above). Schema: `Name` (title),
+`Description` (text), `Projects` (relation → Projects Database), `Tasks
+(direct)` (relation → Tasks database). This replaced the old `Area` select
+property on Tasks/Projects — both now carry an `Area` **relation** pointing
+at rows here instead (see "Not yet integrated" note in conventions.md's
+old text — that whole model is gone).
+
+**Rows (13 active, 1 retired) as of 2026-09-02:** Work, Household,
+Backpacking, Biking, Software Projects, Outings, Health & Fitness, Music,
+Fishing, Disc Golf, Running, Finances, Sewing, and `⚠️ Personal (retired —
+broken into specific areas) — safe to delete` (flagged, not deleted — no
+delete tool available, see conventions.md).
+
+**Every active row got a page built out 2026-09-02** (this was empty
+before): each Area page now has —
+```
+## ✅ Tasks
+<inline Tasks view, table, FILTER "Area" = "<this-area's-page-url>">
+## 📁 Projects
+<inline Projects view, table, FILTER "Area" = "<this-area's-page-url>">
+```
+View names follow `"<Area> Tasks"` / `"<Area> Projects"` (e.g. "Household
+Tasks", "Household Projects"). No additional sort or Completed filter was
+added — deliberately literal to what was asked; add one later if the
+unfiltered-completed-tasks noise turns out to matter in practice.
+Area pages sit under Dashboard → Areas structurally (each is a database
+row/page under the Areas data source, which is embedded on Dashboard), so
+"live in the dashboard" is satisfied by nesting, not a sidebar link.
 
 ## Habit System — `3bf06a5a-b036-815c-b144-ca3ab35d8b9c`
 Well-built, deliberately untouched by the org cleanup. Contains:
@@ -97,14 +151,21 @@ Household Projects was deliberately placed alongside it.
 ## Shared Tasks database — `34d06a5a-b036-804b-b00e-c5cfb202d856`
 (data source `collection://34d06a5a-b036-805d-a876-000b3b97dc18`)
 
-Single database for all tasks — Personal, Work, and Household — split by the
-`Area` property rather than by separate databases (see `conventions.md`).
-All 42 rows (as of the 2026-08 cleanup) are tagged with `Area`. Also carries
-the `Related Household Project` relation described above.
+Single database for all tasks, split by the `Area` **relation** (→ Areas
+database, see above) rather than by separate databases (see
+`conventions.md`). As of 2026-08 this was a select property with three
+values (Work/Personal/Household) — it was converted to a relation at some
+point before 2026-09-02 outside any logged session; treat the select-based
+description as historical only. Also carries the `Related Household
+Project` relation described above.
 
 **`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
 field): select with options `Before Work`, `In Car`, `On Lunch`,
-`Making Dinner`, `At Home` — recurring time/place contexts in the user's
+`Making Dinner`, `At Home`, and `Errands` (this sixth option exists live in
+the schema as of 2026-09-02 but isn't mentioned in the Mode-system session
+log entry below — added later the same day, or another out-of-band edit;
+worth confirming with the user rather than assuming which) — recurring
+time/place contexts in the user's
 day, not urgency and not time-of-day in the generic Morning/Afternoon/
 Evening sense the old field used. See the Habit System page's "Modes"
 section for what belongs in each and the physical cue tied to it. A task
@@ -130,15 +191,16 @@ for keeping Mode assignments current without a one-time bulk pass.
 
 ## Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf`
 (data source `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`)
-Has the same `Area` select property as Tasks (added for future work-project
-use) but existing rows are all Personal-flavored and were left untagged:
-001 Emelbros website, 002 Garden Innovations, 003 Mother's Day 2026,
-004 Financial Tools, Sew a backpack.
+Has the same `Area` relation as Tasks (→ Areas database, see above).
+Tagging coverage as of 2026-09-02 not re-audited this session — re-check
+row-by-row before assuming it's complete; the 2026-08 note that most rows
+were untagged predates the select→relation conversion and may no longer be
+accurate.
 
 ## Not yet integrated
-- Projects Database rows are still mostly untagged with `Area` (only
-  "Order Alignment App" carries one, as `Work`) — flagged in the 2026-08
-  pass, still true as of 2026-09-02.
+- Projects Database `Area` tagging coverage: not re-audited as part of the
+  2026-09-02 Area-pages build — worth a pass if Area-filtered Project views
+  look sparse.
 - The Household Projects ↔ Tasks two-way relation exists but is unused —
   none of the 12 open Household Projects rows are linked to a personal
-  task yet.
+  task yet (status as of 2026-08, not re-checked 2026-09-02).

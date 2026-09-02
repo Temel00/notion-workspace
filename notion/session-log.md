@@ -8,6 +8,57 @@ historical.
 
 ---
 
+## 2026-09-02 (continued, later) — Area pages built; discovered Area is now a relation, not a select
+
+**Context:** user asked for "Area pages" living in the Dashboard, each with
+a Tasks view filtered to that area and a Projects view filtered to that
+area below it. Went to implement against the select-property `Area` model
+documented in `workspace-map.md`/`conventions.md` and found the live
+workspace had already moved on: `Area` is now a **relation** to a new
+**Areas** database (embedded on Dashboard, `collection://757e232c-13bb-409d-9430-3255aca40768`),
+with 13 active rows (Work, Household, Backpacking, Biking, Software
+Projects, Outings, Health & Fitness, Music, Fishing, Disc Golf, Running,
+Finances, Sewing) plus one retired `⚠️ Personal (retired — broken into
+specific areas) — safe to delete` row. None of this was reflected in the
+repo, and no session log entry accounts for the change — it happened
+out-of-band (directly in the Notion app, or a session that didn't update
+this repo).
+
+**Changes made:**
+- Built out all 13 active Area pages (previously blank): each now has
+  `## ✅ Tasks` + an inline Tasks view filtered `Area = <that area>`,
+  followed by `## 📁 Projects` + an inline Projects view filtered the same
+  way. View names follow `"<Area> Tasks"` / `"<Area> Projects"`. Piloted on
+  Work first and verified layout/filter correctness before batch-applying
+  to the other 12.
+- Skipped the retired Personal row (flagged, not a real area).
+- Discovered and documented (did **not** fix) that the old top-level Work
+  page's "Work Tasks"/"Work Projects" views were built against the old
+  select property and silently lost their Area filter when the property
+  type changed — they now show all incomplete tasks regardless of area,
+  not just Work's. Left for the user to decide: fix those views or retire
+  that page in favor of the new Work Area page (which now duplicates it,
+  correctly filtered).
+- Noticed `Mode` has a 6th option, `Errands`, live in the schema that
+  isn't mentioned in the Mode-system entry above it in this log — flagged
+  in `workspace-map.md`, not otherwise investigated.
+- Rewrote the stale parts of `workspace-map.md` (Dashboard's actual
+  current layout, the new Areas database, Tasks/Projects `Area` now being
+  a relation) and `conventions.md` (retired the select-property
+  description, added the Area-page layout convention and a note on the
+  view-filter-silently-drops-on-type-change gotcha).
+
+**Loose ends for the next session:**
+- Old top-level Work page's broken Area filter (above) — not fixed, needs
+  a user decision.
+- `Mode`'s `Errands` option — confirm with the user whether it's
+  intentional and, if so, add it to the Habit System / `/ganymedes`
+  picture where relevant.
+- Projects Database `Area` tagging coverage wasn't re-audited — if any
+  Area page's Projects view looks sparse/empty, that's likely why.
+
+---
+
 ## 2026-09-02 (continued) — Mode system, habit trim, and the /ganymedes skill
 
 **Context:** same-day follow-up to the health check below. User walked
