@@ -8,6 +8,64 @@ historical.
 
 ---
 
+## 2026-09-02 — Post-reorg health check + Ideas cleanup
+
+**Context:** user asked for a full review of the workspace, help with tools
+they're not using because the purpose is unclear or things have multiple
+possible landing spots, and a conversation about their day-to-day work
+habits. Checked the 2026-08-31 reorg against live Notion state.
+
+**Findings:**
+- Confirmed both loose ends from 2026-08-31 are resolved: the duplicate
+  task row and blank Household Projects row are gone (user deleted them
+  manually as instructed).
+- **Ideas page was gone** — not in search, not linked from Personal's page
+  content — but Personal's description callout still referenced it, and
+  2 of its 3 old items had been manually copied into Tasks as untagged,
+  undated orphan rows (a 3rd, "Sew hair-friendly pillow cases," appears
+  lost). This is the "multiple landing spots" friction the user flagged.
+- Inbox has 2 unprocessed items with "Do by" dates already 2+ weeks past
+  (Aug 19, Aug 21) — the weekly "process Inbox to zero" rule isn't
+  currently happening.
+- Daily Log has only 3 rows ever, with a 2-week gap between Aug 18 and
+  Sep 1 — the daily evening loop isn't sticking either.
+- Habits database has **5 rows marked Active**, against its own field
+  description ("never more than three active at once") and
+  `productivity-principles.md`'s "add one at a time" rule. Only 1 of the
+  5 has a `Started` date logged, suggesting they went active together
+  around 2026-08-17 rather than staggered — likely the actual cause of
+  the Daily Log gap, not an unrelated issue.
+- Capture mechanism itself isn't the problem — user adds to Inbox directly
+  from the Notion mobile app, so this isn't a friction-of-tooling issue.
+
+**Decisions (from the user directly):**
+- Drop the Ideas page concept entirely rather than recreate it — ideas go
+  into the one Inbox like anything else and get sorted at weekly review.
+  See `conventions.md` — "Ideas has no separate page."
+- Habit trim (5 → fewer active) — user wants to discuss before deciding;
+  not yet resolved as of this entry.
+
+**Changes made:**
+- Tagged the 2 orphaned Ideas-turned-Tasks rows with `Area: Personal`
+  ("App to track probiotics and pills," "Watch app webhook…").
+- Edited Personal's description callout to remove the dangling Ideas
+  reference and note ideas now flow through Inbox.
+- Updated `workspace-map.md` (removed Ideas entry, added one-line purpose
+  notes for Known Subscriptions/Backpacking as static no-upkeep pages,
+  refreshed "Not yet integrated") and `conventions.md` (new Ideas section).
+
+**Loose ends for the next session:**
+- Habit trim not yet decided — if a follow-up session picks this up cold,
+  check whether the user and a prior session already settled it before
+  re-litigating.
+- The 2 overdue Inbox items (cactus soil for work plant, establish care
+  with a provider) still need processing — flag to the user if they're
+  still sitting there.
+- Projects Database `Area` tagging and the unused Household↔Tasks relation
+  are still open (see `workspace-map.md`).
+
+---
+
 ## 2026-08-31 — Initial Personal/Work reorg + cleanup
 
 **Context:** user asked for help making the Personal/Work pages and their

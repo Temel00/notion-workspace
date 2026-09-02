@@ -11,10 +11,13 @@ or query a data source with `notion-query-data-sources` using the
 ### Personal — `3cd06a5a-b036-804b-aa9e-d73794d805af`
 Private top-level page. Entry point for personal life admin. Links out to:
 - **Dashboard** (below) — planning views into Tasks/Projects/Routines
-- **Habit System** (below) — daily loop, weekly review, capture Inbox
-- **Ideas** — `37d06a5a-b036-809b-bc6f-f993f9984370`
-- **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d`
-- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81`
+- **Habit System** (below) — daily loop, weekly review, capture Inbox (ideas
+  included — see "Ideas has no separate page" in `conventions.md`)
+- **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d` — static
+  reference list (Garmin, Claude Pro, Squarespace domains, Bulwark), not a
+  database, no upkeep expected
+- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81` — static link/note
+  dump for trip research, not a database, no upkeep expected
 
 Shared items formerly parented here (Household Projects, Recipe Book) were
 moved to the Brother's Joint Teamspace — see below. Personal's own callout
@@ -94,6 +97,9 @@ use) but existing rows are all Personal-flavored and were left untagged:
 004 Financial Tools, Sew a backpack.
 
 ## Not yet integrated
-- **Ideas** (`37d06a5a-b036-809b-bc6f-f993f9984370`) has no defined path
-  into the Projects Database yet — ideas that mature into projects are
-  currently a manual copy. Identified, not in scope for the 2026-08 pass.
+- Projects Database rows are still mostly untagged with `Area` (only
+  "Order Alignment App" carries one, as `Work`) — flagged in the 2026-08
+  pass, still true as of 2026-09-02.
+- The Household Projects ↔ Tasks two-way relation exists but is unused —
+  none of the 12 open Household Projects rows are linked to a personal
+  task yet.

@@ -23,6 +23,19 @@ review — and got renamed to "Dashboard" to remove the collision. If you're
 ever tempted to name something "Inbox," check whether you actually mean
 "Dashboard," "Backlog," or "Unsorted" instead.
 
+## Ideas has no separate page — capture them in Inbox too
+There used to be a standalone "Ideas" page. As of 2026-09-02 it's gone (it
+stopped appearing in search/fetch entirely — never diagnosed why, possibly
+deleted via the Notion app), but a description callout on Personal still
+referenced it, and two of its old items had been manually copied into Tasks
+as untagged, undated rows with nowhere else to go. This is the exact "which
+place do I use" friction the Inbox is supposed to prevent, so the fix was to
+stop having a second landing spot rather than recreate the page: ideas now
+go into the same Inbox as everything else and get sorted into a real task
+(or dropped) at weekly review, same as any other captured thought. Don't
+recreate a separate Ideas page — if the user wants one back, that's a
+deliberate reversal to confirm with them, not a default to restore.
+
 ## Shared vs. private placement
 Anything the user's brother also needs to edit belongs in the **Brother's
 Joint Teamspace**, parented under Teamspace Home — not under Personal, even
