@@ -11,10 +11,13 @@ or query a data source with `notion-query-data-sources` using the
 ### Personal — `3cd06a5a-b036-804b-aa9e-d73794d805af`
 Private top-level page. Entry point for personal life admin. Links out to:
 - **Dashboard** (below) — planning views into Tasks/Projects/Routines
-- **Habit System** (below) — daily loop, weekly review, capture Inbox
-- **Ideas** — `37d06a5a-b036-809b-bc6f-f993f9984370`
-- **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d`
-- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81`
+- **Habit System** (below) — daily loop, weekly review, capture Inbox (ideas
+  included — see "Ideas has no separate page" in `conventions.md`)
+- **Known subscriptions** — `37c06a5a-b036-80cd-ba97-f50c71e1c26d` — static
+  reference list (Garmin, Claude Pro, Squarespace domains, Bulwark), not a
+  database, no upkeep expected
+- **Backpacking** — `35306a5a-b036-80f0-8c4e-f78f55fb0d81` — static link/note
+  dump for trip research, not a database, no upkeep expected
 
 Shared items formerly parented here (Household Projects, Recipe Book) were
 moved to the Brother's Joint Teamspace — see below. Personal's own callout
@@ -56,6 +59,19 @@ Well-built, deliberately untouched by the org cleanup. Contains:
 Grounded in behavior-change research (Gollwitzer & Sheeran, Lally et al.,
 Harkin et al., Masicampo & Baumeister, Fogg) — see `productivity-principles.md`.
 
+**Active habits as of 2026-09-02: exactly 3** (the schema's own max) —
+Two bottles front-loaded, Consistent wake time, and the new Morning
+movement (added this date; Started reset to 2026-09-02 for all three so
+the ~66-day automaticity estimate is measured from a clean point). Last
+coffee is the lunch coffee and Morning daylight with coffee are paused
+(not automatic yet per the user directly) — Morning daylight is first in
+line to return once wake time is solid. The 5pm landing habit is paused
+and superseded: its phone/bottles actions moved to being unconditional on
+arrival, its shoes-off action moved to being the deliberate trigger for
+the At Home Mode (see Habit System page's "Modes" section) — don't
+reactivate it as a habit-to-automate, it's been intentionally restructured
+into the Mode system instead.
+
 ## Brother's Joint Teamspace — team id `37506a5a-b036-81d0-90fe-0042296cdb94`
 Shared space, editable by the user and their brother.
 
@@ -86,6 +102,32 @@ Single database for all tasks — Personal, Work, and Household — split by the
 All 42 rows (as of the 2026-08 cleanup) are tagged with `Area`. Also carries
 the `Related Household Project` relation described above.
 
+**`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
+field): select with options `Before Work`, `In Car`, `On Lunch`,
+`Making Dinner`, `At Home` — recurring time/place contexts in the user's
+day, not urgency and not time-of-day in the generic Morning/Afternoon/
+Evening sense the old field used. See the Habit System page's "Modes"
+section for what belongs in each and the physical cue tied to it. A task
+can reasonably fit more than one Mode (laundry: Before Work or At Home) —
+that's expected, not a data problem; the `/ganymedes` skill (see below) is
+how those get resolved case by case rather than pinned permanently.
+
+**`Top of Mind` property** (added 2026-09-02): a separate checkbox, not a
+Mode option — flags urgency independent of context. Deliberately split out
+from Mode so an item can be both urgent and tied to a context. The "Top of
+Mind" view now actually filters on this checkbox (it previously only
+filtered `Completed`, which made it identical to an unfiltered list).
+
+Five new filtered views exist on this data source, one per Mode value:
+Before Work, In Car, On Lunch, Making Dinner, At Home — same shape as the
+"Top of Mind" view (list, `Completed = false` + `Mode = <value>`).
+
+**`/ganymedes` skill** — a project-scoped Claude Code skill at
+`.claude/skills/ganymedes/` in this repo. Invoked with `/ganymedes`, it
+triages tasks with no `Mode` set and unprocessed Inbox items through
+conversation. See the skill file itself for behavior; it's the mechanism
+for keeping Mode assignments current without a one-time bulk pass.
+
 ## Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf`
 (data source `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`)
 Has the same `Area` select property as Tasks (added for future work-project
@@ -94,6 +136,9 @@ use) but existing rows are all Personal-flavored and were left untagged:
 004 Financial Tools, Sew a backpack.
 
 ## Not yet integrated
-- **Ideas** (`37d06a5a-b036-809b-bc6f-f993f9984370`) has no defined path
-  into the Projects Database yet — ideas that mature into projects are
-  currently a manual copy. Identified, not in scope for the 2026-08 pass.
+- Projects Database rows are still mostly untagged with `Area` (only
+  "Order Alignment App" carries one, as `Work`) — flagged in the 2026-08
+  pass, still true as of 2026-09-02.
+- The Household Projects ↔ Tasks two-way relation exists but is unused —
+  none of the 12 open Household Projects rows are linked to a personal
+  task yet.

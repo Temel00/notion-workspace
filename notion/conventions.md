@@ -23,6 +23,19 @@ review — and got renamed to "Dashboard" to remove the collision. If you're
 ever tempted to name something "Inbox," check whether you actually mean
 "Dashboard," "Backlog," or "Unsorted" instead.
 
+## Ideas has no separate page — capture them in Inbox too
+There used to be a standalone "Ideas" page. As of 2026-09-02 it's gone (it
+stopped appearing in search/fetch entirely — never diagnosed why, possibly
+deleted via the Notion app), but a description callout on Personal still
+referenced it, and two of its old items had been manually copied into Tasks
+as untagged, undated rows with nowhere else to go. This is the exact "which
+place do I use" friction the Inbox is supposed to prevent, so the fix was to
+stop having a second landing spot rather than recreate the page: ideas now
+go into the same Inbox as everything else and get sorted into a real task
+(or dropped) at weekly review, same as any other captured thought. Don't
+recreate a separate Ideas page — if the user wants one back, that's a
+deliberate reversal to confirm with them, not a default to restore.
+
 ## Shared vs. private placement
 Anything the user's brother also needs to edit belongs in the **Brother's
 Joint Teamspace**, parented under Teamspace Home — not under Personal, even
@@ -54,6 +67,39 @@ This keeps both sides navigable without manual upkeep.
     why, and tell the user to manually delete it via right-click → Delete
     in the Notion app. Don't leave a blank/duplicate row silently
     unlabeled — flag it even if you can't remove it.
+
+## Mode vs. Area vs. Top of Mind — don't conflate these
+Three different axes exist on Tasks and are easy to blur together:
+- `Area` — which part of life (Work/Personal/Household).
+- `Mode` — which recurring time/place context the task fits (Before Work,
+  In Car, On Lunch, Making Dinner, At Home). Added 2026-09-02, replacing
+  the old `Daily Priority` field (Top of Mind/Morning/Afternoon/Evening),
+  which was time-of-day-only and mostly unused.
+- `Top of Mind` — a plain checkbox for urgency, independent of the other
+  two. It used to be a `Daily Priority` option; it was deliberately split
+  into its own property so an item can be both urgent and tied to a Mode
+  at once, which a single shared field couldn't express.
+
+Don't add a new option to `Mode` for "urgent" or fold urgency logic into
+it — that's what `Top of Mind` is for.
+
+## `notion-update-data-source`: rename + alter in one statement batch can misfire
+Combining `RENAME COLUMN "X" TO "Y"` with `ALTER COLUMN "Y" SET SELECT(...)`
+in the same `statements` call did not alter the renamed column in place —
+it silently created a second column (`"Y 1"`) with the new options instead,
+leaving the renamed column with its old option set. The same thing happened
+combining `DROP COLUMN "Y"` with `RENAME COLUMN "Y 1" TO "Y"` in one call —
+it produced `"Y 2"` instead. The fix: issue each DDL statement that touches
+the same column name in its own separate tool call, letting each fully
+commit before the next runs. Always re-fetch the schema after a rename or
+alter to confirm the column landed with the name and options you expect
+before moving on — don't assume the call did what it said.
+
+## `notion-create-view` needs both `database_id` and `data_source_id`
+Passing only `data_source_id` (the collection URL) fails with "Exactly one
+of `database_id` or `parent_page_id` must be provided" — pass the parent
+database's page ID as `database_id` alongside `data_source_id`, not instead
+of it.
 
 ## Content edits: search-and-replace safety
 When restructuring a page's content with `update_content` (search/replace)

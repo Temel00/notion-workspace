@@ -53,6 +53,23 @@ mechanism for reconciling what got captured/planned against what actually
 happened — keep it lightweight enough that it reliably occurs (per Fogg's
 work on tiny/low-friction habits being the ones that stick).
 
+## Modes: context-based triage, not just time-of-day
+**Principle:** organizing actions by *where/when you can actually do them*
+rather than by project (GTD "contexts") avoids re-deciding what's doable
+every time you glance at a list. Separately, switching contexts while a
+task is still mentally "open" measurably drags focus into the next context
+— attention residue (Leroy, 2009) — which a fixed transition ritual at the
+switch point reduces.
+
+**Applied here:** the `Mode` property (Before Work, In Car, On Lunch,
+Making Dinner, At Home) is a context-based cut of Tasks, distinct from
+`Area`. Each Mode has a physical/environmental cue tied to it (see Habit
+System page) rather than relying on remembering to check it. The one
+deliberate exception is At Home, which uses a forcing function (shoes stay
+on until a task is picked) rather than a zero-friction cue — a targeted
+response to a chronically-deferred category, not the default pattern to
+copy elsewhere.
+
 ## Practical takeaways for future changes
 - Don't multiply capture points. One inbox.
 - Prefer attaching concrete dates/times to open-ended tasks when there's a
