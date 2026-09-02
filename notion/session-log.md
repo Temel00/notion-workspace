@@ -49,13 +49,43 @@ this repo).
   view-filter-silently-drops-on-type-change gotcha).
 
 **Loose ends for the next session:**
-- Old top-level Work page's broken Area filter (above) — not fixed, needs
-  a user decision.
-- `Mode`'s `Errands` option — confirm with the user whether it's
-  intentional and, if so, add it to the Habit System / `/ganymedes`
-  picture where relevant.
 - Projects Database `Area` tagging coverage wasn't re-audited — if any
   Area page's Projects view looks sparse/empty, that's likely why.
+
+---
+
+## 2026-09-02 (continued, later still) — Fixed old Work page filters; Errands mode confirmed, cue TBD
+
+**Context:** direct follow-up to the two loose ends above.
+
+**Changes made:**
+- Fixed the old top-level Work page's views (flagged above, not fixed at
+  the time): `Work Tasks` (`view://3cd06a5a-b036-81c7-9262-000c34001c8e`)
+  now filters `Completed ≠ true AND Area = Work` (relation, not the old
+  select), sort by Due Date asc preserved. `Work Projects`
+  (`view://3cd06a5a-b036-81ef-b96c-000c158c2e77`) — which had *no* filter
+  at all, not just a silently-dropped one — now filters `Area = Work`. User
+  chose to keep this page (duplicating the new Work Area page) rather than
+  retire it.
+- User confirmed `Mode`'s `Errands` option is intentional, not stray
+  schema drift. Not yet added to the Habit System page's Modes table —
+  that needs a "When" and a physical cue, which the user wants to work out
+  together in a follow-up conversation (same pattern as the other 5 modes:
+  a stable trigger tied to an existing routine, not a bare reminder).
+
+**Loose ends for the next session:**
+- Work out Errands' When/cue with the user and add it as a 6th row to the
+  Habit System page's Modes table (`3bf06a5a-b036-815c-b144-ca3ab35d8b9c`),
+  matching the existing table's format. Consider whether a 6th
+  Mode-filtered view on the Tasks data source is wanted too, matching the
+  other 5 (Before Work/In Car/On Lunch/Making Dinner/At Home each have
+  one, per the 2026-09-02 Mode-system entry above) — Errands doesn't have
+  one yet.
+- Projects Database `Area` tagging coverage still not re-audited.
+- Sweep other views for the same select→relation filter-drop gotcha
+  (Work's was found only because this file happened to still describe the
+  old filter — other views without such a paper trail could be silently
+  broken too and nothing would surface it).
 
 ---
 

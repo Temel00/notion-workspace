@@ -32,23 +32,26 @@ moved to the Brother's Joint Teamspace — see below. Personal's own callout
 says so; don't re-add them here.
 
 ### Work (old, top-level) — `3cd06a5a-b036-8099-a149-fb66ceadf024`
-Private top-level page, predates the Areas database below. Structure:
+Private top-level page, predates the Areas database below. Duplicates the
+new **Work** Area page's Tasks/Projects views — kept as-is per the user
+(2026-09-02), not retired. Structure:
 - `## ✅ Tasks` → **Work Tasks** view — `view://3cd06a5a-b036-81c7-9262-000c34001c8e`
+  — filter `Completed ≠ true AND Area = Work` (relation), sorted by Due
+  Date asc.
 - `## 📁 Projects` → **Work Projects** view — `view://3cd06a5a-b036-81ef-b96c-000c158c2e77`
+  — filter `Area = Work` (relation).
 - `## 🗒️ Scratchpad` → link to **AE Todo** (`3cd06a5a-b036-80b7-b242-fd86b27cd68b`),
   now a scratch/notes page, not a task list — the one open item it used to
   hold was migrated into the shared Tasks database.
 
-**⚠️ Broken as of 2026-09-02:** the Work Tasks view's filter was built for
-the old `Area` *select* property (`Area = Work AND Completed ≠ true`).
-When `Area` was converted to a relation (see Areas database below), that
-half of the filter silently dropped instead of erroring — the view's
-`advancedFilter` now has an empty filter group where the Area condition
-used to be, so it shows **all** incomplete tasks from every area, not just
-Work. The Work Projects view likely has the same problem. Not fixed yet —
-this now duplicates the new **Work** Area page below (which has a correctly
-filtered Tasks/Projects view). Flagged for the user to decide: fix this
-page's filters, or retire the page in favor of the Area page.
+**Fixed 2026-09-02:** both views had been built against the old `Area`
+*select* property and silently lost their Area filter when it was
+converted to a relation (see the gotcha noted in `conventions.md`) — Work
+Tasks was showing all incomplete tasks from every area, Work Projects had
+no filter at all. Both now filter on the `Area` relation pointing at the
+Work Area page (`https://app.notion.com/p/3cf06a5ab036818b93a2c9ad7ec540fb`).
+Same gotcha is worth checking for on any other view built before the
+select→relation conversion that this pass didn't happen to touch.
 
 ## Dashboard (formerly "Inbox") — `34d06a5a-b036-80e0-8ce9-ceeee841a3ab`
 Title/icon: "Dashboard" / 🗂️ (renamed from "Inbox" / 📬 — see
@@ -161,10 +164,10 @@ Project` relation described above.
 
 **`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
 field): select with options `Before Work`, `In Car`, `On Lunch`,
-`Making Dinner`, `At Home`, and `Errands` (this sixth option exists live in
-the schema as of 2026-09-02 but isn't mentioned in the Mode-system session
-log entry below — added later the same day, or another out-of-band edit;
-worth confirming with the user rather than assuming which) — recurring
+`Making Dinner`, `At Home`, and `Errands` (confirmed intentional by the
+user 2026-09-02, after this file had flagged it as unexplained — it's a
+real sixth mode, just not yet written up on the Habit System page's Modes
+table below since its "When"/cue hasn't been worked out yet) — recurring
 time/place contexts in the user's
 day, not urgency and not time-of-day in the generic Morning/Afternoon/
 Evening sense the old field used. See the Habit System page's "Modes"
