@@ -8,6 +8,88 @@ historical.
 
 ---
 
+## 2026-09-02 (continued again) — Area became a relation; full Area+Mode triage
+
+**Context:** user asked for help reviewing/categorizing tasks (the
+`/ganymedes`-shaped ask). Along the way, discovered `Area` on Tasks and
+Projects is now a **relation** to a dedicated Areas database, not the
+`Work`/`Personal`/`Household` select `conventions.md`/`workspace-map.md`
+described — that doc was stale, not the workspace. All 48 Tasks rows had a
+null `Area` (not just the 10 missing `Mode`), because nothing had ever
+synced it from `Related Projects`.
+
+**Findings:**
+- Areas database (`collection://757e232c-...`) holds a granular taxonomy:
+  Work, Household, Finances, Software Projects, Health & Fitness, Music,
+  Running, Disc Golf, Fishing, Biking, Backpacking, Sewing, Outings — plus
+  one already-flagged retired `Personal` row. Both Tasks and Projects
+  relate to it directly; the two relations were never linked, so nothing
+  auto-populated `Area` from a task's `Related Projects`.
+- A `Rollup` property already existed on Tasks (or was added mid-session —
+  unclear which, possibly the user adding it live in the Notion app) that
+  correctly rolls up the linked Project's Area. Notion can't make a
+  relation auto-populate from another relation, though, so it's reference-
+  only — renamed to `Project Area (reference)` with a description.
+- Found `Category` (single option: `Nightly Review`, ~21 rows, own saved
+  view) predating and duplicating `Mode = Errands` — same "batch of small
+  personal-admin items" concept done twice.
+- Found the `Backpacking` static page living directly under Personal,
+  despite `Backpacking` also being a row in the Areas database — a real
+  instance of the "which place do I use" friction `conventions.md` already
+  warns about for Inbox/Ideas.
+- `Mode` has a 6th option, `Errands`, that was never documented on the
+  Habit System page's Modes table (only the original 5 are there).
+
+**Decisions (from the user directly):**
+- Keep Area↔Project sync manual, checked each session (not automated via
+  schema) — matches the workspace's existing lightweight-review philosophy
+  rather than adding new infrastructure.
+- Retire `Category`/`Nightly Review`: flagged for the manual-deletion
+  workaround rather than dropped outright (holds real data), `Mode =
+  Errands` is the going-forward mechanism.
+- Confirmed: no generic "Personal" Area anymore — use `Household` as the
+  catch-all for general home/life-admin items that don't fit a specific
+  hobby or Work.
+
+**Changes made:**
+- Renamed `Category` → `⚠️ Category (deprecated — see Mode=Errands, safe to
+  delete)`; renamed its `Nightly Review` view to match. Data untouched,
+  flagged for the user to manually remove per the no-delete-tool
+  workaround.
+- Renamed `Rollup` → `Project Area (reference)`.
+- Added a `## 🧭 Areas` heading + description above the Areas embed on
+  Dashboard (previously a bare, undocumented 4th database block).
+- Moved the `Backpacking` page from directly under Personal to a sub-page
+  of the Areas database's `Backpacking` row; pruned the link and updated
+  the description callout on Personal accordingly.
+- Updated `workspace-map.md` and `conventions.md` to describe the real
+  schema (Area as relation, full Areas list, Mode's Errands option,
+  Project Area reference rollup, Category deprecation, Backpacking's new
+  location).
+- Set `Area` on all 48 Tasks rows except the one already flagged for
+  deletion: 4 via matching their `Related Projects`' Area directly, the
+  remaining ~40 (both open and completed) via batched conversation with
+  the user, 5 tasks at a time.
+- Set `Mode` on the 9 tasks that had it null but now had an Area (mostly
+  build/dev tasks) — all confirmed `At Home` by the user in one batch,
+  since they share the same "needs sit-down focus time" shape.
+
+**Loose ends for the next session:**
+- Three items are flagged `"⚠️ ... safe to delete"` but not removed —
+  needs the user to do it manually in the Notion app: the `Category`
+  property + its `Nightly Review` view on Tasks, the retired `Personal`
+  row in Areas, and the pre-existing `"⚠️ Content moved to Music project
+  notes"` Tasks row. Once confirmed deleted, remove this note (and the
+  corresponding doc references).
+- `Mode = Errands` has no cue-table entry on the Habit System page's Modes
+  section (only the original 5 modes are documented there) — worth adding
+  one, or asking the user what physical cue (if any) they use for it.
+- Household Projects ↔ Tasks relation and Projects Database `Area` tagging
+  are still open from earlier sessions (see `workspace-map.md`'s "Not yet
+  integrated").
+
+---
+
 ## 2026-09-02 (continued) — Mode system, habit trim, and the /ganymedes skill
 
 **Context:** same-day follow-up to the health check below. User walked
