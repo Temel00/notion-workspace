@@ -72,9 +72,11 @@ This keeps both sides navigable without manual upkeep.
 Three different axes exist on Tasks and are easy to blur together:
 - `Area` — which part of life (Work/Personal/Household).
 - `Mode` — which recurring time/place context the task fits (Before Work,
-  In Car, On Lunch, Making Dinner, At Home). Added 2026-09-02, replacing
-  the old `Daily Priority` field (Top of Mind/Morning/Afternoon/Evening),
-  which was time-of-day-only and mostly unused.
+  In Car, On Lunch, Making Dinner, At Home, Errands — `Errands` added
+  2026-09-02 evening for tasks requiring the user to be out, distinct from
+  `At Home`'s in-apartment scope). Added 2026-09-02, replacing the old
+  `Daily Priority` field (Top of Mind/Morning/Afternoon/Evening), which was
+  time-of-day-only and mostly unused.
 - `Top of Mind` — a plain checkbox for urgency, independent of the other
   two. It used to be a `Daily Priority` option; it was deliberately split
   into its own property so an item can be both urgent and tied to a Mode
@@ -94,6 +96,46 @@ the same column name in its own separate tool call, letting each fully
 commit before the next runs. Always re-fetch the schema after a rename or
 alter to confirm the column landed with the name and options you expect
 before moving on — don't assume the call did what it said.
+
+## View filter DSL cannot filter on formula or rollup properties
+`notion-create-view`/`notion-update-view`'s `configure` DSL only supports
+filtering on select/multi_select/status/date/number/checkbox/relation/
+person/verification properties (per its own `notion://docs/view-dsl-spec`
+resource) — formula and rollup are not in that list, and this is a real,
+confirmed limitation, not just missing docs. Attempting `FILTER "SomeFormula"
+= TRUE` doesn't error — it silently produces an empty filter group that
+matches everything, which is worse than an error because it looks like it
+worked. Confirmed 2026-09-02 by testing directly: `Ready` (a boolean
+formula) and `Open Prerequisites` (a rollup) both produced empty groups,
+while a plain relation filter (`"Blocked By" IS EMPTY`) worked immediately.
+**Always verify a newly-added filter by fetching the view back and checking
+the filter isn't an empty group** — don't trust the tool's success message
+alone. The properties themselves still compute and display correctly
+(as table/board columns) — only filtering on them via this API is blocked.
+**Workaround:** the user must add that filter condition by hand in the
+Notion app UI (its native filter UI does support formula/rollup properties)
+— a one-time, per-view, ~10-second step.
+
+## Self-relation pattern for same-database dependencies (e.g. task prerequisites)
+Same mechanism as the cross-database `DUAL` relation above, but pointing a
+data source at itself:
+```sql
+ADD COLUMN "Blocked By" RELATION('<same-data-source-id>', DUAL 'Enables')
+```
+Pair it with a rollup counting open (unchecked) linked items, and a formula
+reading that rollup, to get a computed "is this actually workable" signal
+without any manual bookkeeping:
+```sql
+ADD COLUMN "Open Prerequisites" ROLLUP('Blocked By', 'Completed', 'unchecked')
+ADD COLUMN "Ready" FORMULA('prop("Open Prerequisites") == 0')
+```
+`Ready` is true both when there are no linked prerequisites and when all of
+them are completed — no need for a separate empty-check. Add each of these
+three as its own `notion-update-data-source` call (see the rename/alter
+batching pitfall above) and re-fetch the schema to confirm before moving on.
+Remember the "View filter DSL" limitation above still applies to `Ready` —
+it works as a display column immediately, but filtering by it needs the
+manual per-view step.
 
 ## `notion-create-view` needs both `database_id` and `data_source_id`
 Passing only `data_source_id` (the collection URL) fails with "Exactly one

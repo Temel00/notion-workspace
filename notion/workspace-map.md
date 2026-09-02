@@ -24,7 +24,9 @@ moved to the Brother's Joint Teamspace — see below. Personal's own callout
 says so; don't re-add them here.
 
 ### Work — `3cd06a5a-b036-8099-a149-fb66ceadf024`
-Private top-level page, mirrors Personal's role for work life. Structure:
+Private top-level page, mirrors Personal's role for work life. Structure
+as of 2026-08-31 (still current as of this writing, but **slated for a
+redesign** — see "Planned: Work page pivot" below):
 - `## ✅ Tasks` → **Work Tasks** view (table, filter `Area = Work AND
   Completed ≠ true`, sorted by Due Date asc) — `view://3cd06a5a-b036-81c7-9262-000c34001c8e`
 - `## 📁 Projects` → **Work Projects** view (table, filter `Area = Work`)
@@ -36,11 +38,50 @@ Private top-level page, mirrors Personal's role for work life. Structure:
 Both views read from the shared **Tasks database** (see below), filtered by
 the `Area` property — Work does not have its own separate task database.
 
+**Planned: Work page pivot (stated 2026-09-02 evening, not yet executed).**
+Now that the Dashboard's Mode Board is meant to be the single place the
+user actually works from, the user no longer wants Work to function as a
+second place to track/complete tasks — that's exactly the "things could
+fall through the gaps" risk of two working surfaces. Direction given:
+- The `Work Tasks` filtered view (`Area = Work`, read-only reference) is
+  fine to keep — it's just for visibility, not a place to work from.
+- The `Work Projects` view's usefulness was called into question too
+  ("hasn't been that helpful") — worth discussing whether it stays, changes
+  shape, or goes, rather than assuming it's kept as-is.
+- Work should become a page for **project-specific notes/reference
+  material** — things the user wants to remember — and **frequently used
+  links/locations** (webpages, tools), not a task tracker in its own right.
+This has not been implemented yet — it's a next-session task.
+
 ## Dashboard (formerly "Inbox") — `34d06a5a-b036-80e0-8ce9-ceeee841a3ab`
 Title/icon: "Dashboard" / 🗂️ (renamed from "Inbox" / 📬 — see
 `conventions.md` for why). This is the **planning** surface, not the capture
-surface. Layout: two-column quick-view section (To Process / This Week |
-Projects / Routines) followed by the three full database embeds:
+surface, and as of 2026-09-02 evening it's also the intended **single
+working surface**: the user works by opening this page, looking at the
+Mode they're in, and knocking out what's ready — not by visiting Work or
+Personal separately (see Work section below and `session-log.md` for the
+in-progress follow-through on that).
+
+Layout (rebuilt 2026-09-02 evening, replacing the old two-column quick-view
++ three-full-embed layout entirely):
+- **Mode Board** — an inline embed of the Tasks database's "Mode Board"
+  view (board type, grouped by `Mode`, `Completed = false`). This is the
+  page's primary content now.
+- Below a divider, the three real databases (Tasks, Projects Database,
+  Routines Database) are kept as small `inline="false"` linked references
+  — not full tables — purely so they stay referenced (removing all
+  reference to a real database via `replace_content` deletes it; see
+  `conventions.md`). Click through to reach the full tables.
+- The old quadrant boxes (To Process / This Week / Projects / Routines
+  quick-views) were removed. They were confirmed to be view-only stub
+  database blocks with no independent data (the Notion API's own
+  delete-protection error listed them as separate untitled database
+  objects, but per this file's own history they were always filtered
+  views over the shared Tasks/Projects/Routines data) — removing them lost
+  no data.
+
+Canonical database pages (still the source of truth, just no longer shown
+as full tables here):
 - Tasks — `34d06a5a-b036-804b-b00e-c5cfb202d856` (data source
   `collection://34d06a5a-b036-805d-a876-000b3b97dc18`)
 - Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf` (data source
@@ -104,13 +145,21 @@ the `Related Household Project` relation described above.
 
 **`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
 field): select with options `Before Work`, `In Car`, `On Lunch`,
-`Making Dinner`, `At Home` — recurring time/place contexts in the user's
-day, not urgency and not time-of-day in the generic Morning/Afternoon/
-Evening sense the old field used. See the Habit System page's "Modes"
-section for what belongs in each and the physical cue tied to it. A task
-can reasonably fit more than one Mode (laundry: Before Work or At Home) —
-that's expected, not a data problem; the `/ganymedes` skill (see below) is
-how those get resolved case by case rather than pinned permanently.
+`Making Dinner`, `At Home`, `Errands` (`Errands` added 2026-09-02 evening —
+see below) — recurring time/place contexts in the user's day, not urgency
+and not time-of-day in the generic Morning/Afternoon/Evening sense the old
+field used. See the Habit System page's "Modes" section for what belongs
+in each and the physical cue tied to it. A task can reasonably fit more
+than one Mode (laundry: Before Work or At Home) — that's expected, not a
+data problem; the `/ganymedes` skill (see below) is how those get resolved
+case by case rather than pinned permanently.
+
+**`Errands` Mode** (added 2026-09-02 evening): distinct from `At Home` —
+`At Home` is for quick tasks completable inside the apartment; `Errands` is
+for tasks requiring the user to be out and about (shopping, appointments,
+anything needing a physical trip). Added mid-session when `/ganymedes`
+triage revealed several backlog tasks didn't fit any of the original 5
+Modes for exactly this reason.
 
 **`Top of Mind` property** (added 2026-09-02): a separate checkbox, not a
 Mode option — flags urgency independent of context. Deliberately split out
@@ -118,9 +167,39 @@ from Mode so an item can be both urgent and tied to a context. The "Top of
 Mind" view now actually filters on this checkbox (it previously only
 filtered `Completed`, which made it identical to an unfiltered list).
 
-Five new filtered views exist on this data source, one per Mode value:
-Before Work, In Car, On Lunch, Making Dinner, At Home — same shape as the
-"Top of Mind" view (list, `Completed = false` + `Mode = <value>`).
+**Prerequisite tracking** (added 2026-09-02 evening): came up when
+`/ganymedes` split two-step tasks (e.g. "Replant Cactus and bring into
+work" → "Replant Cactus" + "Bring cactus into work") and the sequencing
+between the pair was otherwise lost. Four new properties on this data
+source:
+- `Blocked By` / `Enables` — a self-referencing `DUAL` relation (Tasks →
+  Tasks), same mechanism as the Household Projects ↔ Tasks relation.
+  `Blocked By` holds the prerequisite task(s); `Enables` is its
+  auto-synced mirror on the prerequisite side.
+- `Open Prerequisites` — rollup on `Blocked By` → `Completed`, aggregation
+  `unchecked`. Counts how many linked prerequisites are still open (0 if
+  empty or all done).
+- `Ready` — formula, `prop("Open Prerequisites") == 0`. True when a task
+  has no open prerequisite.
+- `Created` — `created_time` property, added because `Ready`'s sibling
+  `Aging Flag` formula needed a referenceable creation timestamp (the
+  data source's implicit `createdTime` isn't exposed as a schema property
+  usable in formulas).
+- `Aging Flag` — formula, shows a bold red "⚠ 2+ weeks old" badge when a
+  task is incomplete and `Created` is 14+ days ago, else blank. Pure
+  visual signal (see `conventions.md` for why it can't drive a view filter
+  yet).
+
+Six filtered list views exist on this data source, one per Mode value:
+Before Work, In Car, On Lunch, Making Dinner, At Home, Errands — same
+shape as the "Top of Mind" view (list, `Completed = false` + `Mode =
+<value>`), plus `Aging Flag` shown as a display column. A seventh view,
+**Mode Board** (board type, `GROUP BY Mode`, `Completed = false`), also
+exists as a tab on this database and is separately embedded on the
+Dashboard page (see below) as the primary "what can I work on right now"
+surface. **None of these 7 views filter on `Ready` yet** — see
+`conventions.md`'s "View filter DSL" limitation entry; adding `Ready is
+checked` to each is a pending manual step in the Notion app.
 
 **`/ganymedes` skill** — a project-scoped Claude Code skill at
 `.claude/skills/ganymedes/` in this repo. Invoked with `/ganymedes`, it

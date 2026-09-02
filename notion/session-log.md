@@ -8,6 +8,101 @@ historical.
 
 ---
 
+## 2026-09-02 (continued, evening) — First real /ganymedes run: Errands mode, prerequisites, Mode Board dashboard
+
+**Context:** first actual `/ganymedes` triage session (the skill itself was
+built earlier the same day). User wanted to talk through today's plan (a
+spice-organizing task) and then work through the 25ish backlog tasks with
+no `Mode` set. Turned into three linked structural additions along the way.
+
+**Decisions (from the user directly):**
+- The 5 original Modes weren't enough — tasks kept forcing into `At Home`
+  that were really "I have to go out for this." Added a 6th Mode:
+  `Errands`, distinct from `At Home` (in-apartment vs. out-and-about).
+- Two-step tasks (e.g. "Replant Cactus and bring into work") need their
+  sequencing preserved when split, not just correct Modes on each half —
+  user wants prerequisite relationships to persist as a system, not a
+  one-off fix. Chose a native self-relation (`Blocked By`/`Enables`) over
+  Notion's sub-item hierarchy (decomposition, not sequencing) or a
+  description-text note (invisible to filtering).
+- Wanted actual enforcement ("don't let me complete a blocked task") —
+  landed on a rollup+formula "Ready" signal feeding view filters as the
+  low-friction option, over a native Notion Automation (which would need
+  manual in-app setup anyway and adds a harder "why won't this save"
+  friction point if ever legitimately overridden).
+- Wants an aging indicator on stale backlog items — visual flag (colored
+  formula badge), not a hard mechanism, since Notion can't conditionally
+  recolor a row/icon via formula or the API.
+- Wants the Dashboard to become the **single place the user actually works
+  from** — open Dashboard, look at current Mode, knock out what's ready.
+  Explicitly chose to replace the old quick-view quadrants and full-table
+  embeds entirely with one Mode-grouped kanban board, not add it alongside.
+- Follow-on (end of session): Work page should stop being a second place
+  where tasks live — see `workspace-map.md`'s "Planned: Work page pivot"
+  under the Work section for the specifics; not yet implemented.
+
+**Changes made:**
+- Tasks schema: added `Errands` to `Mode`; added `Blocked By`/`Enables`
+  (self `DUAL` relation), `Open Prerequisites` (rollup), `Ready` (formula),
+  `Created` (`created_time`), `Aging Flag` (formula badge) — see
+  `workspace-map.md` and `conventions.md` for full detail on each.
+- Created "Organize and label spices" task (Household, Making Dinner, due
+  2026-09-02).
+- Triaged 10 of the ~24 Mode-less backlog tasks (2 split into prerequisite
+  pairs — see below); 14 remain untriaged (list below).
+- Split "Replant Cactus and bring into work" → "Replant Cactus" (At Home,
+  5-15min) blocking "Bring cactus into work" (Before Work, <5min). Split
+  "Establish Healthcare" → "Call member number" (On Lunch, 5-15min, due
+  2026-09-02) blocking "Submit Collaborative Care form" (At Home, <5min).
+- Added 6 Mode-filtered list views (added `Errands`, refreshed the other 5
+  to show `Aging Flag`) plus a new **Mode Board** view (board, grouped by
+  `Mode`) — both as a tab on the Tasks database and embedded directly on
+  Dashboard.
+- Rebuilt the Dashboard page: removed the old two-column quick-view
+  quadrants (confirmed safe — view-only stubs, no independent data) and
+  demoted the three full-table embeds to small linked references; the Mode
+  Board is now the page's primary content.
+- Discovered and documented a real tool limitation: the view-filter DSL
+  can't filter on formula/rollup properties (silently produces an empty,
+  match-everything filter rather than erroring) — see `conventions.md`.
+  This blocked wiring `Ready` into any view filter via the API.
+- Updated `workspace-map.md` and `conventions.md` throughout for all of
+  the above (Mode option list, Dashboard structure, the DSL limitation,
+  the self-relation pattern, the Work-page pivot plan).
+
+**Mid-session correction (for calibration, not action):** an early batch of
+page updates used mismatched page IDs and briefly overwrote "Establish
+Healthcare" with "Replant Cactus" data. Caught immediately via a
+verification query and reverted before the user could see it — flagging
+here only because it's a reminder to verify page-ID-to-task mapping before
+bulk updates, not because anything is still wrong.
+
+**Loose ends for the next session:**
+- **Manual step needed, 7 views:** add `Ready is checked` as a filter
+  condition (in the Notion app UI) to the 6 Mode-filtered list views and
+  the Mode Board — this is what actually makes blocked tasks stop
+  appearing until their prerequisite clears. Everything computational is
+  already live; only the filter wiring is missing, and only because the
+  API can't do it.
+- **14 backlog tasks still need a Mode**, picking up where this session
+  left off (batch 3 was interrupted by the schema work): Track Eth
+  transactions, Update Financial tracker, Brainstorm music Ideas with
+  Brent, Car Crash Relationship - song idea, "Pull the Chute" application,
+  Develop workout plan, Create a blog portion of my website to upload
+  hobbies to, DiffChecker app on Emelbros.com, Template Project launcher on
+  Emelbros.com, Talaria app deployed on Emelbros.com, Build Self-improver
+  workflow for agentic coding, Create Cat scratcher builder for Feebs, App
+  to track probiotics and pills, Watch app webhook for quick actions.
+- **Work page pivot** (see `workspace-map.md`) — turn Work into
+  project-notes/reference-links territory, keep only a read-only
+  `Area = Work` filtered view (re-evaluate whether `Work Projects` stays,
+  changes, or goes — user called it "not that helpful" but didn't decide
+  its fate), remove any sense of Work as a place to *work from*.
+- The Inbox (Habit System capture database) was empty this session — no
+  processing needed, but don't assume that's steady-state.
+
+---
+
 ## 2026-09-02 (continued) — Mode system, habit trim, and the /ganymedes skill
 
 **Context:** same-day follow-up to the health check below. User walked
