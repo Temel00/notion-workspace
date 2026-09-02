@@ -59,6 +59,19 @@ Well-built, deliberately untouched by the org cleanup. Contains:
 Grounded in behavior-change research (Gollwitzer & Sheeran, Lally et al.,
 Harkin et al., Masicampo & Baumeister, Fogg) — see `productivity-principles.md`.
 
+**Active habits as of 2026-09-02: exactly 3** (the schema's own max) —
+Two bottles front-loaded, Consistent wake time, and the new Morning
+movement (added this date; Started reset to 2026-09-02 for all three so
+the ~66-day automaticity estimate is measured from a clean point). Last
+coffee is the lunch coffee and Morning daylight with coffee are paused
+(not automatic yet per the user directly) — Morning daylight is first in
+line to return once wake time is solid. The 5pm landing habit is paused
+and superseded: its phone/bottles actions moved to being unconditional on
+arrival, its shoes-off action moved to being the deliberate trigger for
+the At Home Mode (see Habit System page's "Modes" section) — don't
+reactivate it as a habit-to-automate, it's been intentionally restructured
+into the Mode system instead.
+
 ## Brother's Joint Teamspace — team id `37506a5a-b036-81d0-90fe-0042296cdb94`
 Shared space, editable by the user and their brother.
 
@@ -88,6 +101,32 @@ Single database for all tasks — Personal, Work, and Household — split by the
 `Area` property rather than by separate databases (see `conventions.md`).
 All 42 rows (as of the 2026-08 cleanup) are tagged with `Area`. Also carries
 the `Related Household Project` relation described above.
+
+**`Mode` property** (added 2026-09-02, replaces the old `Daily Priority`
+field): select with options `Before Work`, `In Car`, `On Lunch`,
+`Making Dinner`, `At Home` — recurring time/place contexts in the user's
+day, not urgency and not time-of-day in the generic Morning/Afternoon/
+Evening sense the old field used. See the Habit System page's "Modes"
+section for what belongs in each and the physical cue tied to it. A task
+can reasonably fit more than one Mode (laundry: Before Work or At Home) —
+that's expected, not a data problem; the `/ganymedes` skill (see below) is
+how those get resolved case by case rather than pinned permanently.
+
+**`Top of Mind` property** (added 2026-09-02): a separate checkbox, not a
+Mode option — flags urgency independent of context. Deliberately split out
+from Mode so an item can be both urgent and tied to a context. The "Top of
+Mind" view now actually filters on this checkbox (it previously only
+filtered `Completed`, which made it identical to an unfiltered list).
+
+Five new filtered views exist on this data source, one per Mode value:
+Before Work, In Car, On Lunch, Making Dinner, At Home — same shape as the
+"Top of Mind" view (list, `Completed = false` + `Mode = <value>`).
+
+**`/ganymedes` skill** — a project-scoped Claude Code skill at
+`.claude/skills/ganymedes/` in this repo. Invoked with `/ganymedes`, it
+triages tasks with no `Mode` set and unprocessed Inbox items through
+conversation. See the skill file itself for behavior; it's the mechanism
+for keeping Mode assignments current without a one-time bulk pass.
 
 ## Projects Database — `34d06a5a-b036-8098-accd-c5bd4e5ab7bf`
 (data source `collection://34d06a5a-b036-8014-93bb-000ba1a0486a`)
